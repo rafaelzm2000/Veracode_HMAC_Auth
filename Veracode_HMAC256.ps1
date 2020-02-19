@@ -98,18 +98,34 @@ Function CalculateAuthorizationHeader($IdCA, $apiKeyCA, $urlBaseCA, $urlPathCA, 
     }
     
 }
-         
-$id = '608d5bba6be6f048c93c86b68ef6cd3a'
-$key = 'de555c0fbdb22e4dc097ff8985376817beeffae9f1a5f4e9c8ab6a7f46467172da6fe03fd106233623628f2eb03709e4e523bb81a784107a98739494d37ec9d6'
 
+<# The script uses environment variables to hide your API ID and Key. 
+ # You will need to set up two environment variables called Veracode_API_ID and Veracode_API_Key.
+ # You may use your credentials as plain text. However, that is not recommended. 
+#>         
+$id = $env:Veracode_API_ID
+$key = $env:Veracode_API_Key
 
 $authorizationScheme = 'VERACODE-HMAC-SHA-256'
 $requestVersion = "vcode_request_version_1"
 $method = 'GET'
 $urlBase = "analysiscenter.veracode.com"
-$urlPath = "/api/5.0/getapplist.do"
-$urlQueryParams = ''
-$url = 'https://' + $urlBase + $urlPath
+$urlPath = "/api/5.0/getbuildlist.do"
+<# $urlQueryParams Usage
+ # If you only one parameter, do not add the '?' The code will handle it. Example: $urlQueryParams = 'app_id=420049'
+ # If you have more then one parameter, ingore the first '?' but add it between each parameter. 
+ # Example: $urlQueryParams = 'app_id=12345?sandbox_id=12345?version=scanname'
+#>
+$urlQueryParams = 'app_id=420049'
+
+if (-not ([string]::IsNullOrEmpty($urlQueryParams)))
+{
+    $url = 'https://' + $urlBase + $urlPath + '?' + $urlQueryParams
+
+}else {
+
+    $url = 'https://' + $urlBase + $urlPath 
+}
 
 <# Construct Header #>
 $authorization = CalculateAuthorizationHeader $id $key $urlBase $urlPath $method $urlQueryParams
@@ -126,7 +142,7 @@ Try{
     $status = $response.StatusCode
     $body = $response.Content
 
-    Write-Host "Web request Status Code:$status"
+    Write-Host "Request Status Code:$status"
     Write-Host "Response:$body"
 }
 catch {
