@@ -100,7 +100,7 @@ Function CalculateAuthorizationHeader($IdCA, $apiKeyCA, $urlBaseCA, $urlPathCA, 
 }
 
 <# The script uses environment variables to hide your API ID and Key. 
- # You will need to set up two environment variables called Veracode_API_ID and Veracode_API_Key.
+ # You will need to set up two environment variables called Veracode_API_ID and Veracode_API_Key, if you use the script as is.
  # You may use your credentials as plain text. However, that is not recommended. 
 #>         
 $id = $env:Veracode_API_ID
@@ -112,7 +112,7 @@ $method = 'GET'
 $urlBase = "analysiscenter.veracode.com"
 $urlPath = "/api/5.0/getbuildlist.do"
 <# $urlQueryParams Usage
- # If you only one parameter, do not add the '?' The code will handle it. Example: $urlQueryParams = 'app_id=420049'
+ # If you only have one parameter, do not add the '?' The code will handle it. Example: $urlQueryParams = 'app_id=420049'
  # If you have more then one parameter, ingore the first '?' but add it between each parameter. 
  # Example: $urlQueryParams = 'app_id=12345?sandbox_id=12345?version=scanname'
 #>
@@ -121,9 +121,9 @@ $urlQueryParams = 'app_id=420049'
 if (-not ([string]::IsNullOrEmpty($urlQueryParams)))
 {
     $url = 'https://' + $urlBase + $urlPath + '?' + $urlQueryParams
-
-}else {
-
+}
+else 
+{
     $url = 'https://' + $urlBase + $urlPath 
 }
 
